@@ -48,8 +48,8 @@ prepare:
 	# need reset ?
 	if ! diff ../requirements.txt ../venv/requirements.txt > /dev/null ; then rm -Rf ../venv ; true ; fi
 	if ! diff ../tests/requirements.txt ../venv/requirements-tests.txt > /dev/null ; then rm -Rf ../venv ; true ; fi
-	cd .. && touch hash && HASH=$$(find . -name "*.py" -not -path "./venv/*" -exec bash -c "FILE={} && \
-		echo COPY {} $(FUNCTION_DIR)\$${FILE:1} > .tmp_files ; cat {} | md5" \; | md5) && echo "$$HASH" > .tmp_hash
+	cd .. && echo "" > .tmp_files && touch hash && HASH=$$(find . -name "*.py" -not -path "./venv/*" -exec bash -c "FILE={} && \
+		echo COPY {} $(FUNCTION_DIR)\$${FILE:1} >> .tmp_files ; cat {} | md5" \; | md5) && echo "$$HASH" > .tmp_hash
 	if ! diff ../hash ../.tmp_hash > /dev/null ; then rm ../Dockerfile ; rm ../venv.tgz ; true ; fi
 
 clean:
