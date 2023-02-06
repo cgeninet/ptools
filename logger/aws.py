@@ -42,7 +42,7 @@ class CloudWatch(object):
 
     def put_log_events(self, text='', level='INFO'):
         message = datetime.now().strftime("%Y-%m-%ST%H:%M:%S.%f")[:-3]+'Z'
-        message = f'[{level}] {message} {Logger.log(text)}'
+        message = f'[{level}] {message} {text}'
         try:
             response = self.client.put_log_events(
                 logGroupName=self.log_group_name,
