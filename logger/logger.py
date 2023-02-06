@@ -16,6 +16,17 @@ class Logger(object):
     ERROR = logging.ERROR
     CRITICAL = logging.CRITICAL
     path_len = 0
+    logger = None
+
+    @classmethod
+    def set(cls, logger_instance=None):
+        try:
+            if logger_instance is not None and logger_instance.level:
+                cls.logger = logger_instance
+                return
+        except Exception:
+            pass
+        cls.logger = logging.getLogger("main")
 
     @staticmethod
     def getLevel():
@@ -27,6 +38,8 @@ class Logger(object):
 
     @staticmethod
     def log(text):
+        if Logger.logger is None:
+            Logger.set()
         frame = inspect.currentframe().f_back.f_back
         path = frame.f_globals['__name__']
         if path == '__main__':
@@ -40,23 +53,28 @@ class Logger(object):
 
     @staticmethod
     def debug(text):
-        logger.debug(Logger.log(text))
+        message = Logger.log(text)
+        Logger.logger.debug(message)
 
     @staticmethod
     def info(text):
-        logger.info(Logger.log(text))
+        message = Logger.log(text)
+        Logger.logger.info(message)
 
     @staticmethod
     def warning(text):
-        logger.warning(Logger.log(text))
+        message = Logger.log(text)
+        Logger.logger.warning(message)
 
     @staticmethod
     def error(text):
-        logger.error(Logger.log(text))
+        message = Logger.log(text)
+        Logger.logger.error(message)
 
     @staticmethod
     def critical(text):
-        logger.error(Logger.log(text))
+        message = Logger.log(text)
+        Logger.logger.error(message)
         exit(-1)
 
 

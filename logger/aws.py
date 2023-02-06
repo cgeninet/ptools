@@ -1,6 +1,6 @@
 #  -*- coding: utf-8 -*-
 
-from logger import Logger
+from ptools.logger import Logger
 
 import logging
 import time
@@ -19,16 +19,17 @@ class CloudWatch(object):
             self.log_stream_name = datetime.now().strftime("%Y/%m/%S %H-%M-%S %s")
         else:
             self.log_stream_name = log_stream_name
-        if not level:
-            self.level = Logger.getLevel()
-        else:
-            self.level = level
         self.__kwargs = {}
         try:
             self.client = boto3.client('logs')
             self.client.create_log_stream(logGroupName=self.log_group_name, logStreamName=self.log_stream_name)
+            if not level:
+                self.level = Logger.getLevel()
+            else:
+                self.level = level
         except Exception as e:
-            print(e)
+            self.level = 0
+            Logger.debug(e)
 
     def getLevel(self):
         return self.level
@@ -41,7 +42,7 @@ class CloudWatch(object):
 
     def put_log_events(self, text='', level='INFO'):
         message = datetime.now().strftime("%Y-%m-%ST%H:%M:%S.%f")[:-3]+'Z'
-        message = f'[{level}] {message} {text}'
+        message = f'[{level}] {message} {Logger.log(text)}'
         try:
             response = self.client.put_log_events(
                 logGroupName=self.log_group_name,
