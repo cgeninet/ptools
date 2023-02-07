@@ -4,6 +4,8 @@ from ptools.logger import Logger
 
 import logging
 import time
+import uuid
+
 from datetime import datetime
 
 try:
@@ -15,13 +17,12 @@ except ImportError:
 class CloudWatch(object):
     def __init__(self, log_group_name='/custom/logs', log_stream_name='', level=0, request_id=''):
         self.log_group_name = log_group_name
-        ts = datetime.now().strftime("%s")
         if request_id:
             self.request_id = request_id
         else:
-            self.request_id = ts
+            self.request_id = str(uuid.uuid4())
         if not log_stream_name:
-            self.log_stream_name = datetime.now().strftime("%Y/%m/%S %H-%M-%S ") + ts
+            self.log_stream_name = datetime.now().strftime("%Y/%m/%d %H-%M-%S ") + self.request_id
         else:
             self.log_stream_name = log_stream_name
         self.__kwargs = {}
