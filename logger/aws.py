@@ -13,10 +13,15 @@ except ImportError:
 
 
 class CloudWatch(object):
-    def __init__(self, log_group_name='/custom/logs', log_stream_name='', level=0):
+    def __init__(self, log_group_name='/custom/logs', log_stream_name='', level=0, request_id=''):
         self.log_group_name = log_group_name
+        ts = datetime.now().strftime("%s")
+        if request_id:
+            self.request_id = request_id
+        else:
+            self.request_id = ts
         if not log_stream_name:
-            self.log_stream_name = datetime.now().strftime("%Y/%m/%S %H-%M-%S %s")
+            self.log_stream_name = datetime.now().strftime("%Y/%m/%S %H-%M-%S ") + ts
         else:
             self.log_stream_name = log_stream_name
         self.__kwargs = {}
@@ -41,8 +46,8 @@ class CloudWatch(object):
             print(e)
 
     def put_log_events(self, text='', level='INFO'):
-        message = datetime.now().strftime("%Y-%m-%ST%H:%M:%S.%f")[:-3]+'Z'
-        message = f'[{level}] {message} {text}'
+        ts = datetime.now().strftime("%Y-%m-%ST%H:%M:%S.%f")[:-3]+'Z'
+        message = f'[{level}] {ts} {self.request_id} {text}'
         try:
             response = self.client.put_log_events(
                 logGroupName=self.log_group_name,
