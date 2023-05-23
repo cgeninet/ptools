@@ -66,6 +66,8 @@ all: tests ../Dockerfile lambda-test
 	# docker post
 	echo "FROM $(IMAGE)" >> ../Dockerfile
 	cat ./docker/lambda/post/Dockerfile >> ../Dockerfile
+	if [ -f "../custom.txt" ] ; then \
+		cat ../custom.txt >> ../Dockerfile ; fi
 	if [ -f "../apt.txt" ] ; then \
 		echo "RUN apt-get update && apt-get install -yq $$(cat ../apt.txt)" >> ../Dockerfile ; fi
 	echo "CMD [ \"$(HANDLER)\" ]" >> ../Dockerfile
