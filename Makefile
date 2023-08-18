@@ -22,7 +22,7 @@ AWS_REGION:=$$(echo $(AWS_REGION_PROFILE)\\n$(AWS_REGION_DEFAULT)\\n"eu-west-3"|
 
 tests: prepare ../venv
 	cd ../tests && . ../venv/bin/activate && export PYTHONPATH="../:." && \
-		coverage run --omit test_*,*/site-packages/* -m unittest test_main.py && \
+		coverage run --omit test_*,*/site-packages/* -m unittest test_*.py && \
 		coverage html -d ./coverage
 
 ../venv:
