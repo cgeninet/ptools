@@ -107,7 +107,7 @@ push:
 ecr:
 	aws ecr get-login-password --profile $(profile) --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
 	docker tag $(NAME):$(TAG) ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/$(NAME):$(TAG)
-	docker push ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/$(NAME):$(TAG)
+	docker push ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/$(NAME):$(TAG) --platform "linux/$(arch)"
 
 lambda-test: ~/.aws-lambda-rie/aws-lambda-rie-$(arch)
 	docker stop $(NAME) ; sleep 3
